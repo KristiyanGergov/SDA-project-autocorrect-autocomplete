@@ -7,7 +7,10 @@ import java.util.ArrayList
 import kotlin.math.min
 
 class BKTree(lexicon: Lexicon) : Tree {
+    /** The maximum number of matches to get while searching for similar words. */
     override var maxMatches = 3
+
+    /** The maximum edit distance a word can have from input word to be considered a similar word/autocorrect word. */
     var tolerance = 3
 
     private var root: TreeNode? = null
@@ -34,6 +37,12 @@ class BKTree(lexicon: Lexicon) : Tree {
         current.addChild(TreeNode(word, distance))
     }
 
+    /**
+     * Gets a list of words from the BKTree that have the shortest edit distance from
+     * the input word.
+     * @param word				String
+     * @return ArrayList<String>
+     */
     fun getClosestWords(word: String): ArrayList<String> {
         //Get closest words (edit distance within TOLERANCE)
         val closeWords = getCloseWords(word)
@@ -59,6 +68,13 @@ class BKTree(lexicon: Lexicon) : Tree {
 
     private inner class CloseWord(var word: String, var distance: Int)
 
+
+    /**
+     * Gets a set of the words that have edit distance within the specified tolerance (static variable)
+     * from the input word.
+     * @param word					String
+     * @return HashSet<String>
+     */
     private fun getCloseWords(word: String): HashSet<CloseWord> {
         val closeWords = HashSet<CloseWord>()
         if (word == "") return closeWords
@@ -66,6 +82,14 @@ class BKTree(lexicon: Lexicon) : Tree {
         return closeWords
     }
 
+    /**
+     * Recursive helper function that traverses the root's children that have edit distance
+     * within the range of `TOLERANCE` from the input `word`. Adds root value to
+     * `closeWords` if edit distance is less than or equal to <TOLERANCE>.
+     * @param closeWords		HashSet<String>
+     * @param root 				TreeNode
+     * @param word				String
+     */
     private fun getCloseWords(closeWords: HashSet<CloseWord>, root: TreeNode?, word: String) {
         if (root == null) return
         if (closeWords.size == maxMatches) return

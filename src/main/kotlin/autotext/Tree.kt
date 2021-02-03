@@ -1,9 +1,9 @@
 package autotext
 
-import autotext.Lexicon
-
 interface Tree {
     fun insertWord(word: String)
+
+    /* The maximum number of matches to get while traversing the tree. */
     var maxMatches: Int
 
     fun createTree(lexicon: Lexicon) {
